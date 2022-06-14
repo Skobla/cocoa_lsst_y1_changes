@@ -89,6 +89,32 @@ void cpp_initial_setup()
   spdlog::debug("\x1b[90m{}\x1b[0m: Ends", "initial_setup");
 }
 
+void cpp_init_accuracy_boost(const double accuracy_boost, const double sampling_boost,
+const int integration_accuracy)
+{
+  const double from_desy3_to_lsst_acc = 2;
+
+  Ntable.N_a = static_cast<int>(ceil(Ntable.N_a*accuracy_boost));
+  Ntable.N_ell_TATT = static_cast<int>(ceil(Ntable.N_ell_TATT*accuracy_boost));
+  Ntable.N_ell_TATT = static_cast<int>(ceil(Ntable.N_ell_TATT*from_desy3_to_lsst_acc));
+
+  Ntable.N_k_lin = static_cast<int>(ceil(Ntable.N_k_lin*sampling_boost));
+  Ntable.N_k_nlin = static_cast<int>(ceil(Ntable.N_k_nlin*sampling_boost));
+  Ntable.N_ell = static_cast<int>(ceil(Ntable.N_ell*sampling_boost));
+  
+  Ntable.N_theta  = static_cast<int>(ceil(Ntable.N_theta*sampling_boost));
+
+  Ntable.N_M = static_cast<int>(ceil(Ntable.N_M*sampling_boost));
+
+  precision.low /= accuracy_boost;
+  precision.medium /= accuracy_boost;
+  precision.high /= accuracy_boost;
+  precision.insane /= accuracy_boost; 
+  
+  like.high_def_integration = integration_accuracy;
+}
+
+
 void cpp_init_probes(std::string possible_probes)
 {
   spdlog::debug("\x1b[90m{}\x1b[0m: Begins", "init_probes");
@@ -649,32 +675,6 @@ void cpp_init_baryon_pca_scenarios(std::string scenarios)
   spdlog::debug("\x1b[90m{}\x1b[0m: Ends", "init_baryon_pca_scenarios");
 
   return;
-}
-
-void cpp_init_accuracy_boost(const double accuracy_boost, const double sampling_boost,
-const int integration_accuracy)
-{
-  const double from_desy3_to_lsst_acc = 2;
-
-  Ntable.N_a = static_cast<int>(ceil(Ntable.N_a*accuracy_boost));
-  Ntable.N_ell_TATT = static_cast<int>(ceil(Ntable.N_ell_TATT*accuracy_boost));
-  Ntable.N_ell_TATT = static_cast<int>(ceil(Ntable.N_ell_TATT*from_desy3_to_lsst_acc));
-
-  Ntable.N_k_lin = static_cast<int>(ceil(Ntable.N_k_lin*sampling_boost));
-  Ntable.N_k_nlin = static_cast<int>(ceil(Ntable.N_k_nlin*sampling_boost));
-  Ntable.N_ell = static_cast<int>(ceil(Ntable.N_ell*sampling_boost));
-  
-  Ntable.N_theta  = static_cast<int>(ceil(Ntable.N_theta*sampling_boost));
-
-  Ntable.N_S2 = static_cast<int>(ceil(Ntable.N_S2*sampling_boost));
-  Ntable.N_DS = static_cast<int>(ceil(Ntable.N_DS*sampling_boost));
-
-  precision.low /= accuracy_boost;
-  precision.medium /= accuracy_boost;
-  precision.high /= accuracy_boost;
-  precision.insane /= accuracy_boost; 
-  
-  like.high_def_integration = integration_accuracy;
 }
 
 // ----------------------------------------------------------------------------
